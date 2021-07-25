@@ -1,0 +1,22 @@
+input,
+select {
+  display: block;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #c2c2c2;
+  font-size: 18px;
+  outline: none;
+  width: 100%;
+  max-width: 600px;
+  margin: 10px auto;
+}
+
+input[type="submit"] {
+  background-color: #376cff;
+  color: #ffffff;
+}
+
+input:focus,
+select:focus {
+  box-shadow: 0 0 3px #0000ff;
+}

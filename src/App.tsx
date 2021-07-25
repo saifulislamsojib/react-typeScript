@@ -1,24 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import TodoForm from "./components/TodoForm/TodoForm";
+import TodoList from "./components/TodoList/TodoList";
+
+export interface ITask {
+  title: string;
+  memberName: string;
+  memberEmail: string;
+  status: string;
+  id: number;
+}
 
 function App() {
+  const [tasks, setTasks] = useState<ITask[]>([]);
+
+  const [inputData, setInputData] = useState<ITask>({
+    status: "pending",
+    id: Math.random(),
+  } as ITask);
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
+    setInputData((data) => ({ ...data, [name]: value }));
+  };
+
+  const handleStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.currentTarget;
+    setInputData((data) => ({ ...data, status: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { memberEmail, memberName, title } = inputData;
+    if (memberEmail && memberName && title) {
+      setTasks((preTask) => [...preTask, inputData]);
+      e.currentTarget.reset();
+      setInputData({ status: "pending", id: Math.random() } as ITask);
+    } else {
+      alert("Please Fill Up All Input");
+    }
+  };
+
+  const handleRemove = (id: number) => {
+    const newTasks = tasks.filter((task) => task.id !== id);
+    setTasks(newTasks);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TodoForm
+        handleSubmit={handleSubmit}
+        handleInput={handleInput}
+        handleStatus={handleStatus}
+        inputData={inputData}
+      />
+      <TodoList tasks={tasks} handleRemove={handleRemove} />
     </div>
   );
 }
